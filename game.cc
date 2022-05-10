@@ -10,10 +10,10 @@
 namespace {
 
 std::default_random_engine rand_gen{static_cast<unsigned>(time(0))};
-}
+}//анонимное просторанство имён
 
 Coord nextCord(Coord pos, Direction dir) {
-
+//
 auto sz = View::get()->getSize();
 
 switch (dir) {
@@ -40,21 +40,21 @@ Game::Game(unsigned rabs_n, unsigned snks_l, unsigned period) :
 	snakes_l_(snks_l)
 {
 	auto view = View::get();
-	view->subscribeTimer(std::bind(&Game::tick, this), period);
-	view->subscribeKey([=](int key){
-			if (std::toupper(key) == 'Q')
+	view->subscribeTimer(std::bind(&Game::tick, this), period);//ВОЗВРАЩАЕТ УКАЗАТЕЛЬ НА ВЬЮ
+	view->subscribeKey([=](int key){//ЛЯМБДА ФУНКЦИЯ В КРУГЛЫХ - АРГ ФУНКЦИИ В ФИГУРНЫХ ЧТО ИСПОЛНЯЕТСЯ
+			if (std::toupper(key) == 'Q')//KEY - КЛЮЧ(КЛАВИША) TOUPPER -ПОЛУЧАЕТ КОД СИМВОЛА ПО АСКИ И ВОЗВРАЩАЕТ БОЛЬШУЮ Q
 				view->stop();
 			});
 }
 
 Snake &Game::makeSnake() {
 	std::list<Coord> body;
-	body.push_back(getFreePos());
+	body.push_back(getFreePos());//КООРДИНАТЫ ГОЛОВЫ
 	auto dir = X_INC;
 	for (unsigned i = 0; i < snakes_l_; i++)
 		body.push_back(body.back());
 	snakes_.push_back(Snake(std::move(body), dir));
-	return snakes_.back();
+	return snakes_.back();//ДОБАВЛЯЕМ НОВУЮ ЗМЕЮ В МАССИВ ВСЕХ ЗМЕЙ
 }
 
 Snake::Snake(std::list<Coord> &&body, Direction dir) : cords_(body), dir_(dir) {
@@ -64,8 +64,8 @@ Rabbit::Rabbit(Coord p) : pos(p) {
 }
 
 bool Game::checkIfFree(Coord cord) const {//проверяет что нет конфеты и тела змеи
-	auto rab_pred = [&](auto rab){ return rab.pos == cord;};
-	return std::any_of(rabbits_.cbegin(), rabbits_.cend(), rab_pred)
+	auto rab_pred = [&](auto rab){ return rab.pos == cord;};//АВТО - АВТОМАТИЧЕСКИ ОПРЕДЕЛЯЕТ ТИП
+	return std::any_of(rabbits_.cbegin(), rabbits_.cend(), rab_pred)//ПРОБЕГАЕТ ПО ЛИСТУ
 		|| checkIfCanMove(cord);
 }
 
@@ -93,21 +93,21 @@ Coord Game::getFreePos() const {
 void Game::tick() {
 	auto view = View::get();
 	auto sz = view->getSize();
-	rabbits_.remove_if([=](auto r)
-			{ return !r.pos.inside(sz) && (view->drawEmpty(r.pos), true); }
+	rabbits_.remove_if([=](auto r) 
+			{ return !r.pos.inside(sz) && (view->drawEmpty(r.pos), true); }//УДАЛЯЕТ ВСЕХ КРОЛИКО В ТЕКУЩЕМ КАДРЕ
 		);
 	while (rabbits_.size() < rabs_n_)
 		rabbits_.emplace_back(getFreePos());//ДОБАВЛЕНИЕ НОВОГО КРОЛИКА
 	for (auto r : rabbits_) {
-		view->drawRab(r.pos);
+		view->drawRab(r.pos);//ОТРИСОВЫВЕТ ВСЕХ НОВЫХ КРОЛИКОВ
 	}
 	for (auto&& snake : snakes_) {
 		if (!snake.can_move) {
-			continue;
+			continue;//ОБРАБАТЫВАЕТ ДВИЖЕНИЕ ЗМЕИ В КАДРЕ
 		}
-		auto next = nextCord(snake.cords_.front(), snake.dir_);
+		auto next = nextCord(snake.cords_.front(), snake.dir_);//СЛЕДУЮЩАЯ КООРДИНАТА КУДА НАДО ПЕРЕМЕСТИТЬСЯ
 		auto pred = [=] (auto &&s) {
-			auto &b = s.cords_;
+			auto &b = s.cords_;//
 			return std::find(b.cbegin(), b.cend(), next) != b.cend();
 		};
 		if (	(next.x < 0 && snake.dir_ == X_DEC )	||
@@ -120,13 +120,13 @@ void Game::tick() {
 		} else {
 			auto rab_it = std::find(rabbits_.begin(), rabbits_.end(), next);
 			if (rab_it != rabbits_.end()) {
-				snake.cords_.emplace_front(next);
+				snake.cords_.emplace_front(next);//ПРИКРЕПЛЯЕТ ГОЛОВУ А ХВОСТ ОСТАВЛЯЕТ ПРИ СЪЕДАНИИ
 				view->drawSnake(snake.cords_.front(), snake.clr_);
 				rabbits_.erase(rab_it);//УДАЛЕНИЕ СЪЕДЕННОГО КРОЛИКА
 			} else {
 				snake.cords_.emplace_front(next);
 				view->drawSnake(snake.cords_.front(), snake.cords_.back(), snake.clr_);
-				snake.cords_.pop_back();
+				snake.cords_.pop_back();//ЕСЛИ НЕ СЪЕЛИ КОНФЕТУ
 			}
 		}
 		for (auto &&killer : killers_)

@@ -38,7 +38,7 @@ public:
 			View::get()->drawSnake(snake_->cords_, snake_->clr_);
 		else {
 			for (auto pos : snake_->cords_)
-				View::get()->drawEmpty(pos);
+				View::get()->drawEmpty(pos);//СНАЧАЛА СТИРАЕТ ПОТОМ УДАЛЯЕТ КООРДИНАТЫ ЕСЛИ ПОМИГАЛА НУЖНОЕ КОЛВО РАЗ
 		}
 		if (++i >= TIMES_TO_FLICKER) {
 			for (auto pos : snake_->cords_)

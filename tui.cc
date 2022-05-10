@@ -7,7 +7,7 @@
 
 namespace {
 
-volatile winsize size_;
+volatile winsize size_;//
 struct sigaction sa;
 void winSizeChgHandler(int sig) {
 	ioctl(1, TIOCGWINSZ, &size_);
@@ -92,6 +92,7 @@ void Tui::draw() {
 
 void Tui::stop() {
 	loop_flag_ = false;
+	system("clear"); 
 }
 
 void Tui::runloop() {

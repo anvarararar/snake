@@ -92,7 +92,7 @@ void Gui::drawEmpty(Coord rab) {
 }
 
 void Gui::drawRab(Coord rab) {
-	auto circle{sf::CircleShape{float(cell_sz) / 2}};
+	auto circle{sf::CircleShape{float(cell_sz) / 2}};//радиус круга
 	circle.setFillColor(sf::Color::Green);
 	circle.setPosition(cell_sz * rab.x, cell_sz * rab.y);
 	window_.draw(circle);//РИСУЕТ КОНФЕТУ
@@ -116,6 +116,6 @@ void Gui::drawSnake(std::list<Coord> body, Color clr) {
 }
 
 Coord Gui::getSize() const {
-	auto sz = window_.getSize();
-	return Coord{static_cast<int>(sz.x/cell_sz),static_cast<int>(sz.y/cell_sz)};
+	auto sz = window_.getSize();//размер окна в пикселях
+	return Coord{static_cast<int>(sz.x/cell_sz),static_cast<int>(sz.y/cell_sz)};//делим на размер клетки
 }//ВОЗВРАЩАЕТ РАЗМЕР ВСЕГО ОКНА

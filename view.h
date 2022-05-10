@@ -18,8 +18,8 @@ struct View {
 	using KeyFn = std::function<void(int)>; 
 	using TimerFn = std::function<void()>;
 protected:
-	std::list<KeyFn>  callkey_;//МАССИВЫ С СОБЫТИЯМИ
-	std::list<TimerFn> calltimer_;
+	std::list<KeyFn>  callkey_;//МАССИВЫ С СОБЫТИЯМИ ПРИНИМАЕТ ИНТ ВОЗВР VOID - НАЖАТИЯ
+	std::list<TimerFn> calltimer_;//СОБЫТИЯ ИГРЫ
 	int period_;
 public:
 	View(const View &) = delete;
@@ -36,7 +36,7 @@ public:
 	virtual void drawSnake(std::list<Coord> body, Color clr = BLACK) = 0;
 
 	void subscribeKey(KeyFn callkey);
-	void subscribeTimer(TimerFn calltimer, int period = 0);
+	void subscribeTimer(TimerFn calltimer, int period = 0);//
 	
 	virtual Coord getSize() const = 0;
 	

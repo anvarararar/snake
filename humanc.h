@@ -6,7 +6,7 @@
 class HumanC {
 private:
 	Snake& snake;
-	void Control(int key) {
+	void Control(int key) {//ФУНКЦИЯ ОБРАБОТЧИК
 		switch (std::toupper(key)) {
 			case 'W':
 				snake.dir_=Y_DEC;
@@ -23,7 +23,7 @@ private:
 		}
 	}
 public:
-	HumanC(Game &game, Color clr = RED) : snake(game.makeSnake()) {
+	HumanC(Game &game, Color clr = YELLOW) : snake(game.makeSnake()) {
 		snake.clr_ = clr;
 		View::get()->subscribeKey(std::bind(&HumanC::Control, this, std::placeholders::_1));
 	}

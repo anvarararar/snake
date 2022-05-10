@@ -14,10 +14,10 @@ int main(int argc, char **argv) {
 	HumanC huc{game};
 	BotC bot{game};
 	BotC bota{game};//ищет первую в списке
-	NearestC bot1{game};//ближайшую
-	NearestC bot2{game};
-	NearestC bot3{game};
-	NearestC bot4{game};
+	//NearestC bot1{game};//ближайшую
+	//NearestC bot2{game};
+	//NearestC bot3{game};
+	//NearestC bot4{game};
 	//NearestC bot5{game};
 	ui->runloop();
 }
